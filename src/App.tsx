@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import sqlite3 from 'sqlite3';
 
-function App() {
+import { product } from './interfaces/database';
+
+const db = new sqlite3.Database("./database.db");
+
+const App = () => {
+
+  const [items, setItems] = useState<product[]>([])
+  
+  useEffect(() => {
+    db.all('SELECT * from Product', (err, rows) => {
+      if (err) {
+        console.error("ERROee!");
+        return;
+      }
+      setItems(rows as product[]);
+    })
+  }, [])
+  
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and call to fuck.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Product Data:</h2>
+      <ul>
+        {items.map((row, index) => (
+          <li key={index}>{row.Pname}</li>
+        ))}
+      </ul>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
