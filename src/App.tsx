@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import sqlite3 from 'sqlite3';
 
+import './App.css'
+
 import { product } from './interfaces/database';
 
 const db = new sqlite3.Database("./database.db");
@@ -21,7 +23,7 @@ const App = () => {
   
   
   return (
-    <div>
+    <div className='App'>
       <h2>Product Data:</h2>
       <ul>
         {items.map((row, index) => (
