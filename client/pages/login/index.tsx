@@ -51,12 +51,10 @@ const Login: React.FC<LoginPageProps> = ({ setEmp }) => {
     }
 
     return (
-        <div className="absolute w-full h-full bg-black">
+        <div className="absolute w-full h-full flex flex-col items-center justify-center bg-black">
             <Image className='fixed opacity-40' src={'/background.jpg'} alt={'LOL'} height={1080} width={1920} />
             <div
-                className="fixed top-1/2 ml-[-200px] mt-[-300px] w-[400px] 
-                    h-[600px] left-1/2 bg-white p-8 rounded-lg
-                    flex flex-col">
+                className="w-[400px] bg-white opacity-100 p-8 rounded-lg z-10 flex flex-col">
                 <h1 className='font-bold text-3xl text-center'>Login</h1>
                 <div className="flex flex-col gap-2 mt-4 h-full">
 
@@ -80,15 +78,15 @@ const Login: React.FC<LoginPageProps> = ({ setEmp }) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <div
+                    <button
                         onClick={(e) => { if (!doneButtonLocked) handleLoginDone() }}
-                        className="p-3 mt-auto justify-center bg-blue-600 transition-all text-white flex gap-2 rounded-lg hover:scale-[1.05] hover:cursor-pointer hover:bg-blue-400">
+                        className="p-3 mt-5 justify-center bg-blue-600 transition-all text-white flex gap-2 rounded-lg hover:scale-[1.05] hover:cursor-pointer hover:bg-blue-400">
                         {!doneButtonLocked ? <>
                             <p className='text-xl'>Login</p>
                             {/* <FaArrowRight size={25} /> */}
                         </>
                             : <Loading />}
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>

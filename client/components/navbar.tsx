@@ -39,7 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({ setEmp, currEmp }) => {
                     })}
                 </div>
                 <div
-                    onClick={() => setEmp(undefined)}
+                    onClick={() => { setEmp(undefined) }}
                     className="p-3 mx-2 mt-auto justify-center bg-blue-600 transition-all text-white flex gap-2 rounded-lg hover:scale-[1.05] hover:cursor-pointer hover:bg-blue-400">
                     <>
                         <p className='text-xl'>Log out</p>

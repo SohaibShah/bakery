@@ -1,17 +1,42 @@
 import { IEmployee } from '@/components/employees/employee_row';
 import EmployeesTable from '@/components/employees/employees_table';
 import Loading from '@/components/loading';
-import { DB_BASE_LINK } from '@/constants';
+import NotPermitted from '@/components/not_permitted';
+import { DB_BASE_LINK, LOCAL_USER } from '@/constants';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa';
 
 const Employees = () => {
+
+  const [permission, setPermission] = useState(false)
+  const router = useRouter()
   const [employees, setEmployees] = useState<IEmployee[] | undefined>(undefined)
 
   useEffect(() => {
     fetch(`${DB_BASE_LINK}/employees`).then(res => res.json()).then(data => setEmployees(data.employees))
   }, [])
+
+
+
+  useEffect(() => {
+    let user = localStorage.getItem(LOCAL_USER) || undefined
+    if (user && user !== 'undefined') {
+      let emp: IEmployee = JSON.parse(user)
+      console.log("parsed: " + emp)
+      if (emp.EmpRole === 'Manager') {
+        setPermission(true)
+      } else {
+        setTimeout(() => router.push('/'), 3500)
+      }
+    }
+  }, [router])
+
+  if (!permission) return (
+    <NotPermitted />
+  )
+
 
   return (
     <>

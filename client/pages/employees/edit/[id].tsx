@@ -1,13 +1,16 @@
 import { IEmployee } from '@/components/employees/employee_row'
 import ElevatedPlate from '@/components/general/elevated_plate'
 import Loading from '@/components/loading'
-import { DB_BASE_LINK } from '@/constants'
+import NotPermitted from '@/components/not_permitted'
+import { DB_BASE_LINK, LOCAL_USER } from '@/constants'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Select from 'react-dropdown-select'
 import { FaCheck, FaCheckCircle, FaExclamationCircle, FaTrash } from 'react-icons/fa'
 
 const EditEmployee = () => {
+
+  const [permission, setPermission] = useState(false)
 
   const router = useRouter()
   const [employee, setEmployee] = useState<IEmployee>()
@@ -30,6 +33,19 @@ const EditEmployee = () => {
     { role: "Janitor" },
     { role: "Driver" },
   ]
+
+  useEffect(() => {
+    let user = localStorage.getItem(LOCAL_USER) || undefined
+    if (user && user !== 'undefined') {
+      let emp: IEmployee = JSON.parse(user)
+      console.log("parsed: " + emp)
+      if (emp.EmpRole === 'Manager') {
+        setPermission(true)
+      } else {
+        setTimeout(() => router.push('/'), 3500)
+      }
+    }
+  }, [router])
 
   useEffect(() => {
     if (router.query.id) {
@@ -120,6 +136,10 @@ const EditEmployee = () => {
       setError(defaultError)
     }
   }
+
+  if (!permission) return (
+    <NotPermitted />
+  )
 
   return (
     <>
