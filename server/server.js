@@ -26,14 +26,36 @@ const getTodayDate = () => {
     return today
 }
 
-app.get("/api/home", (req, res) => {
-    if (db) {
-        db.all(`select * from Product`, (err, rows) => {
-            res.json({ message: rows })
-            console.log(err, rows)
-        })
-    }
-})
+// Auth
+{
+    app.post("/api/login", (req, res) => {
+        if (req.body && req.body.username && req.body.password) {
+            db.get('select * from EmpAuth where EmpUsername = ? and EmpPassword = ?', [req.body.username, req.body.password],
+            (err, row) => {
+                if (!err && row) {
+                    const empId = row.EmpID
+                    if (row.EmpID) {
+                        db.get('select * from Employee where EmpID = ?', [empId],
+                        (err, row) => {
+                            if (!err) res.json({ employee: row })
+                            else res.json({ error: err.message })
+                        })
+                    } 
+                    else {
+                        res.status(401)
+                        res.json({ error: 'Invalid username or password!' })
+                    }
+                } 
+                else {
+                    res.status(401)
+                    res.json({ error: 'Invalid username or password!' })
+                }
+            })
+        } else {
+            res.json({ error: 'Invalid attempt!' })
+        }
+    })
+}
 
 // Orders
 {

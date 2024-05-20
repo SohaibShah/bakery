@@ -97,7 +97,8 @@ const EditCustomer = () => {
         }
 
         setPosted(data.message)
-        setDoneButtonLocked(false)
+        await new Promise(res => setTimeout(res, 1000))
+        router.back()
       })
         .catch(error => {
           setError(error)
@@ -130,7 +131,7 @@ const EditCustomer = () => {
               </div>
               <div className="flex justify-between">
                 <p className="mt-1">Customer Contact Number</p>
-                <input type="number"
+                <input type="tel"
                   className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none 
                   [&::-webkit-inner-spin-button]:appearance-none px-2 basis-1/2 outline outline-gray-400 focus:outline-blue-500 focus:outline-2 outline-1 h-8 rounded-lg w-full hover:scale-[1.05] focus:scale-[1.05] transition-all"
                   value={contact}

@@ -29,6 +29,8 @@ const EditOrder = () => {
   const [selectedProducts, setSelectedProducts] = useState<IProduct[]>([])
   const [productQuantity, setProductQuantity] = useState<IProductQuantity[]>([])
 
+  const [orderValue, setOrderValue] = useState(0)
+
   const [orderStatus, setOrderStatus] = useState("Confirmed")
 
   const [loading, setLoading] = useState(true)
@@ -38,6 +40,14 @@ const EditOrder = () => {
 
   const defaultError = "Please ensure all values have been correctly entered!"
   const couldNotLoadError = "Error while loading!"
+
+  useEffect(() => {
+    var total = 0
+    productQuantity.forEach(pq => {
+      total += pq.pricePerUnit * pq.quantity;
+    })
+    setOrderValue(total)
+  }, [productQuantity])
 
   useEffect(() => {
     var error = false
@@ -146,7 +156,8 @@ const EditOrder = () => {
         }
 
         setPosted(data.message)
-        setDoneButtonLocked(false)
+        await new Promise(res => setTimeout(res, 1000))
+        router.back()
       })
         .catch(error => {
           setError(error)
@@ -216,6 +227,7 @@ const EditOrder = () => {
     setSelectedProducts(val)
     setProductQuantity(await Promise.all(val.map(async (val, idx) => {
       var q = 1
+      var p = 0
       var inventory = 0
       await fetch(`${DB_BASE_LINK}/inventory/product?id=${val.ProductID}`).then(res => res.json()).then(data => {
         if (data.inventory) (data.inventory as IInventoryItem[]).forEach(item => {
@@ -224,8 +236,11 @@ const EditOrder = () => {
         else if (data.error) setError(data.error)
         else setError(couldNotLoadError)
       })
-      if (productQuantity[idx]) q = productQuantity[idx].quantity
-      return { product: val, quantity: q, pricePerUnit: 0, inventory: inventory } as IProductQuantity
+      if (productQuantity[idx]) {
+        q = productQuantity[idx].quantity
+        p = productQuantity[idx].pricePerUnit
+      }
+      return { product: val, quantity: q, pricePerUnit: p, inventory: inventory } as IProductQuantity
     })))
     setLoading(false)
   }
@@ -326,6 +341,10 @@ const EditOrder = () => {
                     Add products to continue
                   </div>
                 }
+                <div className="flex mt-4 justify-between">
+                  <h2 className="font-bold">Total Order Value:</h2>
+                  <p className="font-bold text-green-800 text-lg">PKR {orderValue}</p>
+                </div>
               </div>
             </ElevatedPlate>
 

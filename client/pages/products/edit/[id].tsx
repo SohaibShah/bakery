@@ -99,7 +99,8 @@ const EditProduct = () => {
         }
 
         setPosted(data.message)
-        setDoneButtonLocked(false)
+        await new Promise(res => setTimeout(res, 1000))
+        router.back()
       })
         .catch(error => {
           setError(error)
