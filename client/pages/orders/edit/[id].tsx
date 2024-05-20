@@ -8,7 +8,7 @@ import { DB_BASE_LINK } from '@/constants'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Select from 'react-dropdown-select'
-import { FaCheck, FaCheckCircle, FaExclamationCircle, FaMinus, FaPlus, FaTrash } from 'react-icons/fa'
+import { FaArrowLeft, FaCheck, FaCheckCircle, FaExclamationCircle, FaMinus, FaPlus, FaTrash } from 'react-icons/fa'
 
 interface IProductQuantity {
   product: IProduct;
@@ -379,9 +379,9 @@ const EditOrder = () => {
             }
             <div
               onClick={(e) => { if (order?.Status === "Completed") router.back(); else if (!doneButtonLocked) handleOrderDone(e) }}
-              className="p-2 bg-green-600 transition-all text-white flex gap-2 rounded-lg hover:scale-[1.05] hover:cursor-pointer hover:bg-green-400">
+              className={`p-2 bg-${order?.Status === 'Completed' ? 'blue' : 'green'}-600 transition-all text-white flex gap-2 rounded-lg hover:scale-[1.05] hover:cursor-pointer hover:bg-${order?.Status === 'Completed' ? 'blue' : 'green'}-400`}>
               {!doneButtonLocked ? <>
-                {<FaCheck size={22} />}
+                {order?.Status === 'Completed' ? <FaArrowLeft size={22} /> : <FaCheck size={22} />}
                 <p>{order?.Status === 'Completed' ? 'Back' : 'Done'}</p></>
                 : <Loading />}
             </div>

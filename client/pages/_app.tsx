@@ -5,6 +5,7 @@ import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
 import Login from "./login";
 import { LOCAL_USER } from "@/constants";
+import LoadingPage from "@/components/loading_page";
 
 export default function App({ Component, pageProps }: AppProps) {
 
@@ -21,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   if (loggedEmp) return <Layout setEmp={setLoggedEmp} currEmp={loggedEmp}>
     <Component {...pageProps} />
+    <LoadingPage />
   </Layout>;
   else return <Login setEmp={setLoggedEmp} {...pageProps} />
 }
